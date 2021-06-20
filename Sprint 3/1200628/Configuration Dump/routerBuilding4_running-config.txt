@@ -1,0 +1,186 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname routerBuilding4
+!
+!
+!
+!
+ip dhcp excluded-address 10.127.87.1
+ip dhcp excluded-address 10.127.87.65
+ip dhcp excluded-address 10.127.87.129
+ip dhcp excluded-address 10.127.87.193
+!
+ip dhcp pool WiFi_4
+ network 10.127.87.0 255.255.255.192
+ default-router 10.127.87.1
+ dns-server 10.127.86.2
+ domain-name building-4.rcomp-20-21-dn-g2
+ip dhcp pool Floor1_4
+ network 10.127.87.64 255.255.255.192
+ default-router 10.127.87.65
+ dns-server 10.127.86.2
+ domain-name building-4.rcomp-20-21-dn-g2
+ip dhcp pool Floor0_4
+ network 10.127.87.128 255.255.255.192
+ default-router 10.127.87.129
+ dns-server 10.127.86.2
+ domain-name building-4.rcomp-20-21-dn-g2
+ip dhcp pool VoIP_4
+ network 10.127.87.192 255.255.255.224
+ default-router 10.127.87.193
+ option 150 ip 10.127.87.193
+ dns-server 10.127.86.2
+ domain-name building-4.rcomp-20-21-dn-g2
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2811/K9 sn FTX1017WA6Y-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.370
+ encapsulation dot1Q 370
+ ip address 10.127.88.4 255.255.255.128
+ ip nat outside
+!
+interface FastEthernet0/0.386
+ encapsulation dot1Q 386
+ ip address 10.127.86.1 255.255.255.0
+ ip nat inside
+!
+interface FastEthernet0/0.387
+ encapsulation dot1Q 387
+ ip address 10.127.87.1 255.255.255.192
+ ip nat inside
+!
+interface FastEthernet0/0.388
+ encapsulation dot1Q 388
+ ip address 10.127.87.65 255.255.255.192
+ ip nat inside
+!
+interface FastEthernet0/0.389
+ encapsulation dot1Q 389
+ ip address 10.127.87.129 255.255.255.192
+ ip nat inside
+!
+interface FastEthernet0/0.390
+ encapsulation dot1Q 390
+ ip address 10.127.87.193 255.255.255.224
+ ip nat inside
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 4
+ log-adjacency-changes
+ network 10.127.86.0 0.0.1.255 area 4
+ network 10.127.88.0 0.0.0.127 area 0
+!
+router rip
+!
+ip nat inside source static tcp 10.127.86.3 80 10.127.88.4 80 
+ip nat inside source static tcp 10.127.86.3 443 10.127.88.4 443 
+ip nat inside source static tcp 10.127.86.2 53 10.127.88.4 53 
+ip nat inside source static udp 10.127.86.2 53 10.127.88.4 53 
+ip classless
+!
+ip flow-export version 9
+!
+!
+!
+!
+!
+!
+!
+!
+dial-peer voice 1 voip
+ destination-pattern 1..
+ session target ipv4:10.127.81.33
+!
+dial-peer voice 2 voip
+ destination-pattern 2..
+ session target ipv4:10.127.83.65
+!
+dial-peer voice 3 voip
+ destination-pattern 3..
+ session target ipv4:10.127.85.193
+!
+telephony-service
+ max-ephones 10
+ max-dn 10
+ ip source-address 10.127.87.193 port 2000
+ auto assign 1 to 2
+!
+ephone-dn 1
+ number 400
+!
+ephone-dn 2
+ number 401
+!
+ephone 1
+ device-security-mode none
+ mac-address 0003.E4C3.EB48
+ type 7960
+ button 1:1
+!
+ephone 2
+ device-security-mode none
+ mac-address 00E0.F979.92CE
+ type 7960
+ button 1:2
+!
+ephone 3
+ device-security-mode none
+ mac-address 0000.0C09.4368
+!
+ephone 4
+ device-security-mode none
+ mac-address 000C.8570.DDA8
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+
